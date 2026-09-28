@@ -1,0 +1,61 @@
+name: Prepare draft release
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: draft-release
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    uses: ./.github/workflows/ci.yml
+  draft:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: npm run check
+      - run: python tools/package.py
+      - name: Create a draft for the tested commit
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          version=$(node -p "JSON.parse(require('fs').readFileSync('package.json','utf8')).version")
+          tag="v$version"
+          if git rev-parse --verify "refs/tags/$tag" >/dev/null 2>&1; then
+            echo "Tag $tag already exists. Use a new version; existing releases are not overwritten."
+            exit 1
+          fi
+          # Authenticated list includes drafts, which may not have a Git tag yet.
+          # A failed lookup stops the job instead of assuming no release exists.
+          existing_tags=$(gh api --paginate 'repos/{owner}/{repo}/releases' --jq '.[].tag_name')
+          while IFS= read -r existing_tag; do
+            if [ "$existing_tag" = "$tag" ]; then
+              echo "Release or draft $tag already exists. Review it instead of creating another."
+              exit 1
+            fi
+          done <<< "$existing_tags"
+          gh release create "$tag" \
+            --draft --target "$GITHUB_SHA" \
+            --title "Forum Image Collector $tag" \
+            --notes-file docs/RELEASE_NOTES.md \
+            "dist/forum-image-collector-v$version.zip" \
+            "dist/forum-image-collector-source-v$version.zip" \
+            "dist/forum-image-collector-mac-handoff-v$version.zip" \
+            dist/SHA256SUMS.txt

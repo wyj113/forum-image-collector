@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Forum Image Collector</title><link rel="stylesheet" href="panel.css"></head>
+<body>
+<header><div class="brand"><span class="logo">▧</span><div><h1>Forum Image Collector</h1><p data-i18n="tagline">论坛帖子正文图片</p></div></div><div class="header-actions"><a id="source" target="_blank" rel="noreferrer" data-i18n="source">返回来源 ↗</a><label class="language-control" for="language"><span data-i18n="language">界面语言</span><select id="language"><option value="zh">简体中文</option><option value="en">English</option></select></label></div></header>
+<main>
+<section class="intro"><span class="eyebrow">IMAGE COLLECTOR</span><h2 data-i18n="headline">帖子里的图片，一次收好。</h2><p data-i18n="intro">默认读取当前页，也可收集整帖所有页再筛选。头像、签名、表情、引用和视频区域不进入列表。</p></section>
+<section class="controls">
+<div class="topline"><div><strong id="title" data-i18n="loadingTitle">正在读取帖子…</strong><p id="summary" data-i18n="waiting">请稍候</p></div><div class="scan-actions"><button id="rescan" class="quiet" data-i18n="rescan">重新扫描当前页</button><button id="scanThread" class="secondary" hidden="" disabled="" data-i18n="scanThread">扫描整帖全部页</button></div></div>
+<div class="concurrency"><label for="concurrency" data-i18n="concurrency">并发任务数</label><select id="concurrency"><option value="1" data-i18n="sequential">1 · 逐个处理</option><option value="2" selected="" data-i18n="defaultConcurrency">2 · 默认</option><option value="3">3</option><option value="4">4</option></select><span data-i18n="concurrencyHint">用于整帖扫描和下载；内容去重逐张检查。</span></div>
+<div class="actions"><button id="dedup" class="secondary" disabled="" data-i18n="dedup">筛除重复图片</button><button id="download" class="primary" disabled="" data-i18n="download">下载已选图片</button><button id="retryDownloads" class="secondary" disabled="" data-i18n="retryDownloads">重试失败下载</button><button id="stop" class="quiet" hidden="" data-i18n="stop">停止排队</button><span class="spacer"></span><button id="select" class="text" disabled="" data-i18n="select">全选当前可下载</button><button id="clear" class="text" disabled="" data-i18n="clear">取消当前选择</button></div>
+<p class="dedup-hint" data-i18n="dedupHint">去重会读取图片文件，只排除文件内容完全相同的图片。同一面板内重复检查会使用缓存；之后下载仍需读取文件。</p>
+<div class="folder"><label for="folder" data-i18n="folder">保存子文件夹</label><input id="folder" value="帖子图片"><span data-i18n="folderHint">位于 Chrome 默认下载目录内</span></div>
+<p id="status" role="status" aria-live="polite" data-i18n="initialStatus">读取当前页后，可筛选、去重，再挑选下载。</p><progress id="progress" value="0" max="1" hidden=""></progress>
+<a id="threadRetry" class="thread-retry" target="_blank" rel="noreferrer" hidden="" data-i18n="threadRetry">打开待扫描页 ↗</a>
+</section>
+<div class="listhead"><h3><span data-i18n="previews">图片预览 </span><span id="count">0</span></h3><span data-i18n="previewsHint">预览为帖子中的图片；下载前会验证文件</span></div>
+<div class="filters" role="search" aria-label="筛选图片" data-i18n-label="filterLabel">
+<label for="search"><span data-i18n="search">查找图片</span><input id="search" type="search" placeholder="文件名、楼层、页码或来源地址" autocomplete="off" data-i18n-placeholder="searchPlaceholder"></label>
+<label for="filter"><span data-i18n="filter">图片状态</span><select id="filter"><option value="all" data-i18n="all">全部图片</option><option value="ready" data-i18n="ready">可下载</option><option value="error" data-i18n="errorFilter">处理失败</option><option value="done" data-i18n="done">已完成</option><option value="duplicate" data-i18n="duplicate">重复图片</option><option value="unsupported" data-i18n="unsupported">暂不支持</option></select></label>
+<button id="resetFilters" class="quiet" data-i18n="resetFilters">清除筛选</button>
+</div>
+<p id="filterSummary" class="selection-hint" role="status" aria-live="polite"></p>
+<p class="selection-hint" data-i18n="filterHint">选择和下载只作用于当前显示的图片；隐藏图片保留勾选。去重处理整个列表。</p>
+<p class="selection-hint" data-i18n="selectionHint">点击预览单选 · Ctrl＋点击增减选择 · Shift＋点击选择连续区间 · Ctrl＋Shift＋点击追加区间。复选框可单独勾选；Mac 可用 ⌘ 代替 Ctrl。</p>
+<div id="empty" class="empty" hidden="" data-i18n="empty">当前列表没有图片。请在兼容的论坛帖子页点击插件。</div>
+<div id="grid"></div>
+<footer><span data-i18n="footer">整帖扫描时会按并发设置打开后台标签，完成后自动关闭。处理期间请保持本面板打开。</span><br><span data-i18n="footerLimit">只收集正文中直接链接的图片；指向其他页面或图床的图片会标为暂不支持，不会用缩略图代替。</span></footer>
+</main><script type="module" src="panel.js"></script>
+
+</body></html>
