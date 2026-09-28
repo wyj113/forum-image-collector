@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Forum Image Collector",
+  "version": "3.0.0",
+  "description": "Collect images linked in forum posts, preview and select, deduplicate exact files, and download with bounded concurrency.",
+  "minimum_chrome_version": "120",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "downloads"
+  ],
+  "action": {
+    "default_title": "Collect images from this page"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "optional_host_permissions": [
+    "https://*/*"
+  ]
+}

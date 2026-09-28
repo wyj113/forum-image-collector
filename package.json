@@ -1,0 +1,19 @@
+{
+  "name": "forum-image-collector",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "check": "node tools/check.mjs",
+    "verify": "npm test && npm run check"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0"
+  },
+  "version": "3.0.0",
+  "description": "Local-first image collection from forum threads for Chrome.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  }
+}
