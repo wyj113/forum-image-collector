@@ -8,7 +8,7 @@
     "verify": "npm test && npm run check"
   },
   "devDependencies": {
-    "jsdom": "^26.1.0"
+    "jsdom": "^30.1.1"
   },
   "version": "3.0.0",
   "description": "Local-first image collection from forum threads for Chrome.",
